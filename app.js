@@ -24,6 +24,10 @@ app.get('/products/:id', db.getProductID)
 
 app.post('/products', db.createProduct)
 
+app.put('/products/:id', db.updateProduct)
+
+app.delete('/products/:id', db.deleteProduct)
+
 app.listen(port, () => {
     console.log(`Listening on port ${port}.`)
 })
