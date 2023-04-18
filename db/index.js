@@ -31,7 +31,7 @@ const getProductID = (request, response) => {
 const createProduct = (request, response) => {
     const {product_price, product_quantity, product_name} = request.body
 
-    pool.query('INSERT INTO products (product_price, product_quantity, product_name) VALUES ($1, $2, $3, $4) RETURNING *', [product_price, product_quantity, product_name], (error, results) => {
+    pool.query('INSERT INTO products (product_price, product_quantity, product_name) VALUES ($1, $2, $3) RETURNING *', [product_price, product_quantity, product_name], (error, results) => {
         if (error) {
             throw error
         }
@@ -64,8 +64,30 @@ const deleteProduct = (request, response) => {
     })
 }
 
-// register users
+// get registered users
 
+const getUsers = (request, response) => {
+    // const id = parseInt(request.params.id)
+    pool.query('SELECT * FROM users', (error, results) => {
+        if (error) {
+            throw error
+        }
+        response.status(200).send(results.rows)
+    })
+}
+
+// register users
+const registerUser = (request, response) => {
+    const {username, password} = request.body
+    
+    pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *', [username, password], (error, results) => {
+        if (error) {
+            return error
+        }
+        console.log(username)
+        response.status(201).send(`User added with ID: ${results.rows[0].id}`)
+    })
+}
 
 module.exports = {
     query: (text, params, callback) => {
@@ -75,5 +97,7 @@ module.exports = {
     getProductID,
     createProduct,
     updateProduct,
-    deleteProduct
+    deleteProduct,
+    registerUser,
+    getUsers,
   }

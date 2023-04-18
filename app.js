@@ -28,6 +28,11 @@ app.put('/products/:id', db.updateProduct)
 
 app.delete('/products/:id', db.deleteProduct)
 
+app.get('/register', db.getUsers)
+
+// register user
+app.post('/register', db.registerUser)
+
 app.listen(port, () => {
     console.log(`Listening on port ${port}.`)
 })
