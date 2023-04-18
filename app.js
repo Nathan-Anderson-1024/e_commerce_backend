@@ -31,7 +31,7 @@ app.delete('/products/:id', db.deleteProduct)
 app.get('/register', db.getUsers)
 
 // register user
-app.post('/register', db.registerUser)
+app.post('/register', db.createUser)
 
 app.listen(port, () => {
     console.log(`Listening on port ${port}.`)

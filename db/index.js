@@ -77,15 +77,13 @@ const getUsers = (request, response) => {
 }
 
 // register users
-const registerUser = (request, response) => {
-    const {username, password} = request.body
-    
+const createUser = (request, response) => {
+    const {username, password } = request.body
     pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *', [username, password], (error, results) => {
         if (error) {
-            return error
+            throw error
         }
-        console.log(username)
-        response.status(201).send(`User added with ID: ${results.rows[0].id}`)
+        response.status(201).send(`User added with ID: ${results.rows[0].user_id}`).end()
     })
 }
 
@@ -98,6 +96,6 @@ module.exports = {
     createProduct,
     updateProduct,
     deleteProduct,
-    registerUser,
+    createUser,
     getUsers,
   }
