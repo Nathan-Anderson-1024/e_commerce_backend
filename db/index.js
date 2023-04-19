@@ -147,7 +147,7 @@ const getCartID = (request, response) => {
 
 const createCart = (request, response) => {
     const {product_id, qty} = request.body
-    pool.query('INSERT INTO cart (product_id, qty) VALUES ($1, $2) RETURNING *', [product_id, qty], (error, results) => {
+    pool.query('INSERT INTO cart (product_id, qty, session_id) VALUES ($1, $2, CURRENT_DATE) RETURNING *', [product_id, qty], (error, results) => {
         if (error) {
             return response.status(400).send(error)
         }
@@ -187,6 +187,55 @@ const getOrdersByID = (request, response) => {
     })
 }
 
+// checkout (POST /cart/cartID/checkout)
+
+// validate cart to ensure it exists
+    const checkoutCart = (request, response) => {
+        const cart_id = request.params.cartId
+        const {cc_number, security_code, expiration, first_name, last_name, street, city, state, zip} = request.body
+        pool.query(
+        
+        'SELECT * FROM cart WHERE cart_id = $1',
+        
+        [cart_id], (error, results) => {
+            if (error) {
+                return response.status(400).send(error)
+            }
+            // process payment
+            const visaPattern = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+            const mastPattern = /^(?:5[1-5][0-9]{14})$/;
+            const amexPattern = /^(?:3[47][0-9]{13})$/;
+            const discPattern = /^(?:6(?:011|5[0-9][0-9])[0-9]{12})$/
+
+            if (!visaPattern.test(cc_number) && !mastPattern.test(cc_number) && !amexPattern.test(cc_number) && !discPattern.test(cc_number)) {
+                return response.status(500).send('Invalid credit card number')
+            }
+
+            if (security_code.length !== 4 && amexPattern.test(cc_number)) {
+                return response.status(500).send('Invalid security code.')
+            }
+            if (security_code.length > 3 && !amexPattern.test(cc_number)) {
+                return response.status(500).send('Invalid security code.')
+            }
+            // create order
+            pool.query('INSERT INTO orders (user_id, product_id, cart_id, qty, order_date) SELECT user_id, product_id, cart_id, qty, session_id FROM cart WHERE cart_id = $1', [cart_id], (error, results) => {
+                 if (error) {
+                     return response.status(400).send(error)
+                 }
+                 //response.status(200).send(`Order placed for Cart ID: ${cart_id}`)
+                 pool.query('UPDATE cart SET order_id = (SELECT order_id FROM orders WHERE cart_id = $1) WHERE cart_id = $1', [cart_id], (error, results) => {
+                    if (error) {
+                        return response.status(400).send(error)
+                    }
+                    response.status(200).send(`Order placed for Cart ID: ${cart_id} and your cart has been cleared.`)
+                 })
+            })
+        })
+    }
+
+
+
+
 module.exports = {
     query: (text, params, callback) => {
       return pool.query(text, params, callback)
@@ -206,5 +255,6 @@ module.exports = {
     createCart,
     updateCart,
     getOrders,
-    getOrdersByID
+    getOrdersByID,
+    checkoutCart
   }
