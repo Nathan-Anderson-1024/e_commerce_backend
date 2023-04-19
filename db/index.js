@@ -134,6 +134,38 @@ const deleteUser = (request, response) => {
     })
 }
 
+// cart functions
+const getCartID = (request, response) => {
+    const cart_id = request.params.id
+    pool.query('SELECT * FROM cart WHERE cart_id = $1', [cart_id], (error, results) => {
+        if (error) {
+            return response.status(400).send(error)
+        }
+        response.status(200).json(results.rows)
+    })
+}
+
+const createCart = (request, response) => {
+    const {product_id, qty} = request.body
+    pool.query('INSERT INTO cart (product_id, qty) VALUES ($1, $2) RETURNING *', [product_id, qty], (error, results) => {
+        if (error) {
+            return response.status(400).send(error)
+        }
+        response.status(201).json(results.rows)
+    })
+}
+//update the cart based on cart ID
+const updateCart = (request, response) => {
+    const {product_id, qty} = request.body
+    const id = request.params.id
+    pool.query('UPDATE cart SET product_id = $1, qty = $2 WHERE cart_id = $3 RETURNING *', [product_id, qty, id], (error, result) => {
+        if (error) {
+            return response.status(400).send(error)
+        }
+        response.status(200).send(`Cart updated with ID: ${id}`)
+    })
+}
+
 
 
 module.exports = {
@@ -150,5 +182,8 @@ module.exports = {
     getUsers,
     userById,
     updateUser,
-    deleteUser
+    deleteUser,
+    getCartID,
+    createCart,
+    updateCart
   }

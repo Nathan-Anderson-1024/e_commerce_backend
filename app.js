@@ -44,6 +44,14 @@ app.delete('/user/:id', db.deleteUser)
 // register user
 app.post('/register', db.createUser)
 
+// cart routes
+
+app.get('/cart/:id', db.getCartID)
+
+app.post('/cart', db.createCart)
+
+app.put('/cart/:id', db.updateCart)
+
 app.listen(port, () => {
     console.log(`Listening on port ${port}.`)
 })
