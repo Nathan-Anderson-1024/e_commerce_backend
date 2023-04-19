@@ -29,8 +29,17 @@ app.put('/products/:id', db.updateProduct)
 app.delete('/products/:id', db.deleteProduct)
 
 
+//get all users
+app.get('/user', db.getUsers)
 
-app.get('/register', db.getUsers)
+//get user by ID
+app.get('/user/:id', db.userById)
+
+// Update user
+app.put('/user/:id', db.updateUser)
+
+// Delete user
+app.delete('/user/:id', db.deleteUser)
 
 // register user
 app.post('/register', db.createUser)
