@@ -166,7 +166,26 @@ const updateCart = (request, response) => {
     })
 }
 
+// order endpoints
 
+const getOrders = (request, response) => {
+    pool.query('SELECT * FROM orders', (error, results) => {
+        if (error) {
+            return response.status(400).send(error)
+        }
+        response.status(200).json(results.rows)
+    })
+}
+
+const getOrdersByID = (request, response) => {
+    const order_id = request.params.id
+    pool.query('SELECT * FROM orders WHERE order_id = $1', [order_id], (error, results) => {
+        if (error) {
+            return response.status(400).send(error)
+        }
+        response.status(200).json(results.rows)
+    })
+}
 
 module.exports = {
     query: (text, params, callback) => {
@@ -185,5 +204,7 @@ module.exports = {
     deleteUser,
     getCartID,
     createCart,
-    updateCart
+    updateCart,
+    getOrders,
+    getOrdersByID
   }

@@ -52,6 +52,11 @@ app.post('/cart', db.createCart)
 
 app.put('/cart/:id', db.updateCart)
 
+// orders routes
+app.get('/orders', db.getOrders)
+
+app.get('/orders/:id', db.getOrdersByID)
+
 app.listen(port, () => {
     console.log(`Listening on port ${port}.`)
 })
