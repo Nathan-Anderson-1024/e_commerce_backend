@@ -8,12 +8,13 @@ const pool = new Pool({
     port: 5432,
 })
 // get all products
-const getProducts = (request, response) => {
+const getProducts = (request, response, next) => {
     pool.query('SELECT * FROM products', (error, results) => {
         if (error) {
             throw error
         }
         response.status(200).json(results.rows)
+        next()
     })
 }
 // get one product by id
@@ -64,6 +65,18 @@ const deleteProduct = (request, response) => {
     })
 }
 
+// get products by category
+
+const productByCategoryID = (request, response) => {
+    const categoryID = request.params.categoryID
+    pool.query('SELECT * FROM products WHERE category_id = $1', [categoryID], (error, results) => {
+        if (error) {
+            throw error
+        }
+        response.status(200).json(results.rows)
+    })
+}
+
 // get registered users
 
 const getUsers = (request, response) => {
@@ -87,6 +100,8 @@ const createUser = (request, response) => {
     })
 }
 
+
+
 module.exports = {
     query: (text, params, callback) => {
       return pool.query(text, params, callback)
@@ -96,6 +111,7 @@ module.exports = {
     createProduct,
     updateProduct,
     deleteProduct,
+    productByCategoryID,
     createUser,
     getUsers,
   }

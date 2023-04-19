@@ -17,7 +17,7 @@ app.get('/', (request, response, next) => {
 
 
 // Product endpoints
-
+app.get('/products/category/:categoryID', db.productByCategoryID)
 app.get('/products', db.getProducts)
 
 app.get('/products/:id', db.getProductID)
@@ -27,6 +27,8 @@ app.post('/products', db.createProduct)
 app.put('/products/:id', db.updateProduct)
 
 app.delete('/products/:id', db.deleteProduct)
+
+
 
 app.get('/register', db.getUsers)
 
