@@ -18,6 +18,8 @@
   "homepage": "https://github.com/Nathan-Anderson-1024/e_commerce_rest_api#readme",
   "dependencies": {
     "express": "^4.18.2",
+    "passport": "^0.6.0",
+    "passport-local": "^1.0.0",
     "pg": "^8.10.0"
   }
 }
