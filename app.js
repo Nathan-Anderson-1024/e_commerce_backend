@@ -22,13 +22,13 @@ passport.use(new LocalStrategy(function verify(username, password, cb) {
     })
 }))
 
-app.post('/login', (request, response, next) => {
-    const {username, password} = request.body
-    passport.authenticate('local', {failureRedirect: '/login', failureMessage: true}),
-    function (request, response) {
-        response.send(`Successfully logged in as ${username} with password: ${password}`)
-    }
-})
+// app.post('/login', (request, response, next) => {
+//     const {username, password} = request.body
+//     passport.authenticate('local', {failureRedirect: '/login', failureMessage: true}),
+//     function (request, response) {
+//         response.send(`Successfully logged in as ${username} with password: ${password}`)
+//     }
+// })
 
 
 app.get('/', (request, response, next) => {
