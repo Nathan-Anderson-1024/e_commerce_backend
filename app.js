@@ -3,32 +3,25 @@ const app = express()
 const port = 3000
 const db = require('./db/index.js')
 const bodyParser = require('body-parser');
-const passport = require('passport')
-const LocalStrategy = require('passport-local')
+const passport = require("passport");
+require("./db/passportConfig.js")(passport);
+
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: true,
 }))
 
-passport.use(new LocalStrategy(function verify(username, password, cb) {
-    db.get('SELECT * FROM users WHERE username = $1', [username], (error, user) => (error, user) => {
-        if (error) {
-            return cb(err);
-        }
-        if (!user) {
-            return cb(null, false, {message: 'Incorrect username or password.'})
-        }
-    })
-}))
 
-// app.post('/login', (request, response, next) => {
-//     const {username, password} = request.body
-//     passport.authenticate('local', {failureRedirect: '/login', failureMessage: true}),
-//     function (request, response) {
-//         response.send(`Successfully logged in as ${username} with password: ${password}`)
-//     }
-// })
+
+app.post(
+    "/login",
+    passport.authenticate("local-login", { session: false }),
+    (req, res, next) => {
+    res.json({ user: req.user });
+    }
+)
 
 
 app.get('/', (request, response, next) => {

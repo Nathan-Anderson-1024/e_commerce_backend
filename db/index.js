@@ -1,4 +1,8 @@
 const { Pool } = require('pg')
+const bcrypt = require("bcryptjs")
+const passport = require('passport')
+const LocalStrategy = require('passport-local')
+
 
 const pool = new Pool({
     user: 'dbuser',
@@ -7,6 +11,27 @@ const pool = new Pool({
     password: 'password',
     port: 5432,
 })
+
+
+// pool.query('local-login', new LocalStrategy(function verify(username, password, cb) {
+//     ('SELECT * FROM users WHERE username = $1', [username], (error, user) => (error, user) => {
+//         if (error) {
+//             return cb(err);
+//         }
+//         if (!user) {
+//             return cb(null, false, {message: 'Incorrect username or password.'})
+//         }
+//     })
+// }))
+
+
+
+
+
+
+
+
+
 // get all products
 const getProducts = (request, response, next) => {
     pool.query('SELECT * FROM products', (error, results) => {
@@ -81,13 +106,31 @@ const productByCategoryID = (request, response) => {
 // register users
 const createUser = (request, response) => {
     const {username, password } = request.body
-    pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *', [username, password], (error, results) => {
+    const salt = bcrypt.genSalt(10)
+    const hash = bcrypt.hash(password, salt)
+    pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *', [username, hash], (error, results) => {
         if (error) {
             return response.status(400).send(error) 
         }
         response.status(201).send(`User added with ID: ${results.rows[0].user_id}`).end()
     })
 }
+
+// match passwords
+const matchPassword = async (password, hashPassword) => {
+    const match = await bcrypt.compare(password, hashPassword);
+    return match
+};
+
+const emailExists = async (username) => {
+    const data = await client.query("SELECT * FROM users WHERE username=$1", [
+    username,
+    ]);
+    
+    if (data.rowCount == 0) return false; 
+    return data.rows[0];
+    };
+
 //get all users
 const getUsers = (request, response) => {
     // const id = parseInt(request.params.id)
@@ -251,5 +294,8 @@ module.exports = {
     updateCart,
     getOrders,
     getOrdersByID,
-    checkoutCart
+    checkoutCart,
+    matchPassword,
+    emailExists,
+    pool
   }
