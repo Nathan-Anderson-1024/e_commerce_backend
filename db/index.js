@@ -10,6 +10,38 @@ const pool = new Pool({
     password: 'password',
     port: 5432,
 })
+/**
+ * @swagger
+ * definitions:
+ *   Products:
+ *     properties:
+ *       id:
+ *         type: integer
+ *       product_price:
+ *         type: numeric(32,0)
+ *       product_quantity:
+ *         type: integer
+ *       product_name:
+ *         type: text
+ *       category_id:
+ *         integer
+ */
+/**
+ * @swagger
+ * /products:
+ *   get:
+ *     tags:
+ *       - Products
+ *     description: Returns all products
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: An array of all products
+ *         schema:
+ *           $ref: '#/eCommerce/products'
+ */
+
 
 // get all products
 const getProducts = (request, response, next) => {

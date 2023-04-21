@@ -5,7 +5,33 @@ const db = require('./db/index.js')
 const bodyParser = require('body-parser');
 const passport = require("passport");
 require("./db/passportConfig.js")(passport);
+const swaggerJSDoc = require('swagger-jsdoc')
 
+const swaggerDefinition = {
+    info: {
+      title: 'Node Swagger API',
+      version: '1.0.0',
+      description: 'Demonstrating how to describe a RESTful API with Swagger',
+    },
+    host: 'localhost:3000',
+    basePath: '/',
+};
+  
+  // options for the swagger docs
+const options = {
+    // import swaggerDefinitions
+    swaggerDefinition: swaggerDefinition,
+    // path to the API docs
+    apis: ['./routes/*.js'],
+};
+  
+  // initialize swagger-jsdoc
+const swaggerSpec = swaggerJSDoc(options);
+
+app.get('/swagger.json', function(req, res) {
+    res.setHeader('Content-Type', 'application/json');
+    res.send(swaggerSpec);
+});
 
 
 app.use(bodyParser.json());

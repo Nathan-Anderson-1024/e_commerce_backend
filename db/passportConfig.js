@@ -1,6 +1,5 @@
 const bcrypt = require("bcryptjs")
 const LocalStrategy = require("passport-local");
-// const { createUser } = require("./index");
 const db = require('./index')
 
 const matchPassword = async (password, hashPassword) => {
@@ -37,26 +36,3 @@ module.exports = (passport) => {
     }))
 }
 
-// passport.use('local-login', new LocalStrategy(function verify(username, password, cb) {
-//     db.get('SELECT * FROM users WHERE username = $1', [username], (error, user) => (error, user) => {
-//         if (error) {
-//             return cb(err);
-//         }
-//         if (!user) {
-//             return cb(null, false, {message: 'Incorrect username or password.'})
-//         }
-//     })
-// }))
-
-// module.exports = (passport) => {
-//     db.get('local-login', new LocalStrategy(function verify(username, password, cb) {
-//         ('SELECT * FROM users WHERE username = $1', [username], (error, user) => (error, user) => {
-//             if (error) {
-//                 return cb(err);
-//             }
-//             if (!user) {
-//                 return cb(null, false, {message: 'Incorrect username or password.'})
-//             }
-//         })
-//     }))
-// }
