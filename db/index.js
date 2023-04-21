@@ -1,7 +1,6 @@
 const { Pool } = require('pg')
 const bcrypt = require("bcryptjs")
-const passport = require('passport')
-const LocalStrategy = require('passport-local')
+
 
 
 const pool = new Pool({
@@ -11,26 +10,6 @@ const pool = new Pool({
     password: 'password',
     port: 5432,
 })
-
-
-// pool.query('local-login', new LocalStrategy(function verify(username, password, cb) {
-//     ('SELECT * FROM users WHERE username = $1', [username], (error, user) => (error, user) => {
-//         if (error) {
-//             return cb(err);
-//         }
-//         if (!user) {
-//             return cb(null, false, {message: 'Incorrect username or password.'})
-//         }
-//     })
-// }))
-
-
-
-
-
-
-
-
 
 // get all products
 const getProducts = (request, response, next) => {
@@ -116,20 +95,6 @@ const createUser = (request, response) => {
     })
 }
 
-// match passwords
-const matchPassword = async (password, hashPassword) => {
-    const match = await bcrypt.compare(password, hashPassword);
-    return match
-};
-
-const emailExists = async (username) => {
-    const data = await client.query("SELECT * FROM users WHERE username=$1", [
-    username,
-    ]);
-    
-    if (data.rowCount == 0) return false; 
-    return data.rows[0];
-    };
 
 //get all users
 const getUsers = (request, response) => {
@@ -295,7 +260,5 @@ module.exports = {
     getOrders,
     getOrdersByID,
     checkoutCart,
-    matchPassword,
-    emailExists,
     pool
   }

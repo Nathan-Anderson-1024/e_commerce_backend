@@ -1,18 +1,38 @@
-const passport = require("passport");
+const bcrypt = require("bcryptjs")
 const LocalStrategy = require("passport-local");
-const { emailExists, createUser, matchPassword } = require("./index");
+// const { createUser } = require("./index");
 const db = require('./index')
+
+const matchPassword = async (password, hashPassword) => {
+    const match = await bcrypt.compare(password, hashPassword);
+    return match
+};
+
+const emailExists = async (username) => {
+    const data = await db.pool.query("SELECT * FROM users WHERE username=$1", [
+    username,
+    ]);
+    
+    if (data.rowCount == 0) return false; 
+    return data.rows[0];
+    };
 
 
 module.exports = (passport) => {
     passport.use('local-login', new LocalStrategy(function verify(username, password, cb) {
-        db.pool.query('SELECT * FROM users WHERE username = $1', [username], (error, user) => (error, user) => {
+        db.pool.query('SELECT * FROM users WHERE username = $1', [username], async function (error, user) {
+            const isEmail = await emailExists(username)
+            if (!isEmail) return cb(null, false, {message: 'Incorrect username or password.'})
+
             if (error) {
-                return cb(err);
+                return cb(error);
             }
             if (!user) {
                 return cb(null, false, {message: 'Incorrect username or password.'})
             }
+            const matchedPasswords = await matchPassword(password, user.rows[0].password)
+            if (!matchedPasswords) return cb(null, false, {message: 'Incorrect username or password'})
+            return cb(null, user)
         })
     }))
 }
