@@ -10,37 +10,7 @@ const pool = new Pool({
     password: 'password',
     port: 5432,
 })
-/**
- * @swagger
- * definitions:
- *   Products:
- *     properties:
- *       id:
- *         type: integer
- *       product_price:
- *         type: numeric(32,0)
- *       product_quantity:
- *         type: integer
- *       product_name:
- *         type: text
- *       category_id:
- *         integer
- */
-/**
- * @swagger
- * /products:
- *   get:
- *     tags:
- *       - Products
- *     description: Returns all products
- *     produces:
- *       - application/json
- *     responses:
- *       200:
- *         description: An array of all products
- *         schema:
- *           $ref: '#/eCommerce/products'
- */
+
 
 
 // get all products
@@ -53,6 +23,9 @@ const getProducts = (request, response, next) => {
         next()
     })
 }
+
+
+
 // get one product by id
 const getProductID = (request, response) => {
     const id = parseInt(request.params.id)
@@ -64,6 +37,8 @@ const getProductID = (request, response) => {
     })
     
 }
+
+
 // create a product
 const createProduct = (request, response) => {
     const {product_price, product_quantity, product_name} = request.body
@@ -72,11 +47,11 @@ const createProduct = (request, response) => {
         if (error) {
             return response.status(400).send(error)
         }
-        response.status(201).send(`Product added with Product ID: ${results.rows[0].id}`)
+        response.status(201).send(`Product added with Product ID: ${results.rows[0].id}\n {"product_price": ${product_price}, "product_quantity": ${product_quantity}, "product_name": ${product_name}}`)
     })
 }
 
-//update a product
+
 const updateProduct = (request, response) => {
     const {product_price, product_quantity, product_name} = request.body
     const id = parseInt(request.params.id)
@@ -87,6 +62,7 @@ const updateProduct = (request, response) => {
         response.status(204).send(`Product updated with Product ID: ${id}`)
     })
 }
+
 
 // delete a product
 
