@@ -66,6 +66,8 @@ app.get('/products/category/:categoryID', db.productByCategoryID)
  * @swagger
  * /products:
  *   get:
+ *     tags:
+ *       - Products
  *     summary: Retrieve a JSON object of all products.
  *     description: Retrieve a list of products from eCommerce API. Can be used to populate a list of fake products when prototyping or testing an API.
  *     responses:
@@ -96,6 +98,8 @@ app.get('/products', db.getProducts)
  * @swagger
  * /products/{id}:
  *   get:
+ *     tags:
+ *       - Products
  *     summary: Retrieve a single product.
  *     description: Retrieve a single product. Can be used to populate a product page when prototyping or testing an API.
  *     parameters:
@@ -133,6 +137,8 @@ app.get('/products/:id', db.getProductID)
  * @swagger
  * /products:
  *   post:
+ *     tags:
+ *       - Products
  *     summary: Create a product.
  *     parameters:
  *       - in: body
@@ -179,16 +185,14 @@ app.post('/products', db.createProduct)
  * @swagger
  * /products/{id}:
  *   put:
- *     tags: Products
+ *     tags:
+ *       - Products
  *     description: Updates a single product
- *     produces: application/json
+ *     produces: 
+ *       - application/json
  *     parameters:
- *       name: id
- *       in: body
- *       description: Fields for the Product resource
- *       schema:
- *         type: array
- *         $ref: '#/definitions/Products'
+ *       - name: id
+ *         in: body
  *     responses:
  *       200:
  *         description: Successfully updated
@@ -216,17 +220,118 @@ app.put('/products/:id', db.updateProduct)
  */
 app.delete('/products/:id', db.deleteProduct)
 
-
-//get all users
+/**
+ * @swagger
+ * /user:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Retrieve a JSON object of all users.
+ *     description: Retrieve a list of users registered on the eCommerce API. Can be used to populate a list of fake users when prototyping or testing an API.
+ *     responses:
+ *       200:
+ *         description: A list of users.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       user_id:
+ *                         type: integer
+ *                         description: The user ID.
+ *                         example: 2
+ *                       username:
+ *                         type: string
+ *                         description: The users's username.
+ *                         example: Nate
+ */
 app.get('/user', db.getUsers)
 
-//get user by ID
+
+/**
+ * @swagger
+ * /user/{id}:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: Retrieve a single user.
+ *     description: Retrieve a single user by ID. Can be used to identify a user when prototyping or testing an API.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Numeric ID of the user to retrieve.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A singular user.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         description: The user ID.
+ *                         example: 2
+ *                       username:
+ *                         type: string
+ *                         description: The users's username.
+ *                         example: nate
+ */
 app.get('/user/:id', db.userById)
 
-// Update user
+/**
+ * @swagger
+ * /user/{id}:
+ *   put:
+ *     tags:
+ *       - User
+ *     description: Updates a single user
+ *     produces: 
+ *       - application/json
+ *     parameters:
+ *       username: username
+ *       in: body
+ *       description: Fields for the Product resource
+ *       schema:
+ *         type: array
+ *     responses:
+ *       200:
+ *         description: Successfully updated
+ */
 app.put('/user/:id', db.updateUser)
 
-// Delete user
+/**
+ * @swagger
+ * /user/{id}:
+ *   delete:
+ *     tags:
+ *       - User
+ *     description: Deletes a single user
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: User's id
+ *         in: path
+ *         required: true
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: Successfully deleted user.
+ */
 app.delete('/user/:id', db.deleteUser)
 
 // register user
