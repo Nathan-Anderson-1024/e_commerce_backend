@@ -489,12 +489,142 @@ app.post('/cart', db.createCart)
  */
 app.put('/cart/:id', db.updateCart)
 
-// orders routes
+/**
+ * @swagger
+ * /orders:
+ *   get:
+ *     tags:
+ *       - Orders
+ *     summary: Retrieve a JSON object of all orders.
+ *     description: Retrieve a list of orders on the eCommerce API. Can be used to populate a list of fake orders when prototyping or testing an API.
+ *     responses:
+ *       200:
+ *         description: A list of orders.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       order_id:
+ *                         type: integer
+ *                         description: The order ID.
+ *                         example: 2
+ *                       user_id:
+ *                         type: integer
+ *                         description: The user ID of the user who placed the order.
+ *                         example: 2
+ *                       order_date:
+ *                         type: date
+ *                         description: The date the order was placed.
+ *                         example: '2015-01-01'
+ *                       cart_id:
+ *                         type: integer
+ *                         description: The cart ID associated with the order.
+ *                         example: 2
+ *                       qty:
+ *                         type: integer
+ *                         description: The quantity of items purchased.
+ *                         example: 10
+ *                       product_id:
+ *                         type: integer
+ *                         description: The product ID of the items purchased
+ *                         example: 2
+ */
 app.get('/orders', db.getOrders)
 
+/**
+ * @swagger
+ * /orders/{id}:
+ *   get:
+ *     tags:
+ *       - Orders
+ *     summary: Retrieve a single order by ID.
+ *     description: Retrieve a single order by ID. Can be used to identify items in an order when prototyping or testing an API.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Numeric ID of the order to retrieve.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A singular order.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       order_id:
+ *                         type: integer
+ *                         description: The order ID.
+ *                         example: 2
+ *                       user_id:
+ *                         type: integer
+ *                         description: The user ID of the user who placed the order.
+ *                         example: 2
+ *                       order_date:
+ *                         type: date
+ *                         description: The date the order was placed.
+ *                         example: '2015-01-01'
+ *                       cart_id:
+ *                         type: integer
+ *                         description: The cart ID associated with the order.
+ *                         example: 2
+ *                       qty:
+ *                         type: integer
+ *                         description: The quantity of items purchased.
+ *                         example: 10
+ *                       product_id:
+ *                         type: integer
+ *                         description: The product ID of the items purchased
+ *                         example: 2
+ */
 app.get('/orders/:id', db.getOrdersByID)
 
-// checkout
+/**
+ * @swagger
+ * /cart/{cartId}/checkout:
+ *   post:
+ *     tags:
+ *       - Checkout
+ *     summary: Checkout the cart.
+ *     parameters:
+ *       - in: body
+ *         name: JSON Object
+ *         required: true
+ *         description: Checkout info that must be added to checkout items.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - cc_number
+ *           properties:
+ *             ccnumber:
+ *               type: integer
+ *               example: 5555555555554444
+ *             security_code:
+ *               type: integer
+ *               example: 333
+ *       - in: path
+ *         name: cartId
+ *         required: true
+ *         description: Cart ID of the cart to checkout.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       201:
+ *         description: Order placed and order ID associated with cart.
+ */
 app.post('/cart/:cartId/checkout', db.checkoutCart)
 
 app.listen(port, () => {
