@@ -609,7 +609,7 @@ app.get('/orders/:id', db.getOrdersByID)
  *           required:
  *             - cc_number
  *           properties:
- *             ccnumber:
+ *             cc_number:
  *               type: integer
  *               example: 5555555555554444
  *             security_code:

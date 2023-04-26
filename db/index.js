@@ -221,7 +221,7 @@ const getOrdersByID = (request, response) => {
             const discPattern = /^(?:6(?:011|5[0-9][0-9])[0-9]{12})$/
 
             if (!visaPattern.test(cc_number) && !mastPattern.test(cc_number) && !amexPattern.test(cc_number) && !discPattern.test(cc_number)) {
-                return response.status(500).send('Invalid credit card number')
+                return response.status(500).send(`Invalid credit card`)
             }
 
             if (security_code.length !== 4 && amexPattern.test(cc_number)) {
@@ -230,14 +230,17 @@ const getOrdersByID = (request, response) => {
             if (security_code.length > 3 && !amexPattern.test(cc_number)) {
                 return response.status(500).send('Invalid security code.')
             }
+            else {
+                pool.query('UPDATE cart SET order_id = (SELECT order_id FROM orders WHERE cart_id = $1) WHERE cart_id = $1', [cart_id], (error, results) => {
+                    if (error) {
+                        return response.status(400).send(error)
+                    }
+                    response.status(200).send(`Order placed for Cart ID: ${cart_id} and your cart has been cleared.`)
+                 })
+            }
 
             //response.status(200).send(`Order placed for Cart ID: ${cart_id}`)
-            pool.query('UPDATE cart SET order_id = (SELECT order_id FROM orders WHERE cart_id = $1) WHERE cart_id = $1', [cart_id], (error, results) => {
-               if (error) {
-                   return response.status(400).send(error)
-               }
-               response.status(200).send(`Order placed for Cart ID: ${cart_id} and your cart has been cleared.`)
-            })
+            
        })
 
 
