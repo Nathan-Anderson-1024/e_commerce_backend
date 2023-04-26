@@ -191,8 +191,17 @@ app.post('/products', db.createProduct)
  *     produces: 
  *       - application/json
  *     parameters:
- *       - name: id
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Numeric ID of the product to update.
+ *         schema:
+ *           type: integer
+ *       - name: values
  *         in: body
+ *         required: true
+ *         type: object
+ *         example: {"product_price": 100, "product_quantity": 1, "product_name": "product_xyz"}
  *     responses:
  *       200:
  *         description: Successfully updated
@@ -302,13 +311,19 @@ app.get('/user/:id', db.userById)
  *     produces: 
  *       - application/json
  *     parameters:
- *       username: username
- *       in: body
- *       description: Fields for the Product resource
- *       schema:
- *         type: array
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Numeric ID of the user to update.
+ *         schema:
+ *           type: integer
+ *       - name: values
+ *         in: body
+ *         required: true
+ *         type: object
+ *         example: {"username": "Bob", "password": "fakepassword"}
  *     responses:
- *       200:
+ *       201:
  *         description: Successfully updated
  */
 app.put('/user/:id', db.updateUser)
@@ -334,7 +349,33 @@ app.put('/user/:id', db.updateUser)
  */
 app.delete('/user/:id', db.deleteUser)
 
-// register user
+/**
+ * @swagger
+ * /register:
+ *   post:
+ *     tags:
+ *       - Register
+ *     summary: Create a new user.
+ *     parameters:
+ *       - in: body
+ *         name: JSON Object
+ *         required: true
+ *         description: username and password of the user you would like to add
+ *         schema:
+ *           type: object
+ *           required:
+ *             - username
+ *           properties:
+ *             username:
+ *               type: text
+ *               example: "Nathan"
+ *             password:
+ *               type: text
+ *               example: "password123"
+ *     responses:
+ *       201:
+ *         description: The user was created.
+ */
 app.post('/register', db.createUser)
 
 // cart routes

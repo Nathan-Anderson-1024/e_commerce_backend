@@ -59,7 +59,7 @@ const updateProduct = (request, response) => {
         if (error) {
             return response.status(400).send(error)
         }
-        response.status(204).send(`Product updated with Product ID: ${id}`)
+        response.status(200).send(`Product updated with Product ID: ${id}`)
     })
 }
 
@@ -91,10 +91,10 @@ const productByCategoryID = (request, response) => {
 
 
 // register users
-const createUser = (request, response) => {
+const createUser = async (request, response) => {
     const {username, password } = request.body
-    const salt = bcrypt.genSalt(10)
-    const hash = bcrypt.hash(password, salt)
+    const salt = await bcrypt.genSalt(10)
+    const hash =  await bcrypt.hash(password, salt)
     pool.query('INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *', [username, hash], (error, results) => {
         if (error) {
             return response.status(400).send(error) 
