@@ -378,12 +378,115 @@ app.delete('/user/:id', db.deleteUser)
  */
 app.post('/register', db.createUser)
 
-// cart routes
 
+/**
+ * @swagger
+ * /cart/{id}:
+ *   get:
+ *     tags:
+ *       - Cart
+ *     summary: Retrieve a single cart by ID.
+ *     description: Retrieve a single cart by ID. Can be used to identify items in a cart when prototyping or testing an API.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Numeric ID of the cart to retrieve.
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A singular cart.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                         description: The cart ID.
+ *                         example: 2
+ *                       order_id:
+ *                         type: integer
+ *                         description: The order id associated with the cart if the order has been placed.
+ *                         example: 1
+ *                       product_id:
+ *                         type: integer
+ *                         description: The product id in the cart.
+ *                       qty:
+ *                         type: integer
+ *                         description: The quantity of the item in the cart.
+ *                       session_id:
+ *                         type: date
+ *                         description: The date the cart was created
+ *                       user_id:
+ *                         type: integer
+ *                         description: The user ID who owns the cart
+ */
 app.get('/cart/:id', db.getCartID)
 
+/**
+ * @swagger
+ * /cart:
+ *   post:
+ *     tags:
+ *       - Cart
+ *     summary: Create a new cart.
+ *     parameters:
+ *       - in: body
+ *         name: JSON Object
+ *         required: true
+ *         description: Cart info that must be added to create a new cart.
+ *         schema:
+ *           type: object
+ *           required:
+ *             - product_id
+ *           properties:
+ *             product_id:
+ *               type: integer
+ *               example: 1
+ *             qty:
+ *               type: integer
+ *               example: 10
+ *             user_id:
+ *               type: integer
+ *               example: 2
+ *     responses:
+ *       201:
+ *         description: The cart was created.
+ */
 app.post('/cart', db.createCart)
 
+/**
+ * @swagger
+ * /cart/{id}:
+ *   put:
+ *     tags:
+ *       - Cart
+ *     description: Updates a single cart by ID
+ *     produces: 
+ *       - application/json
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Numeric ID of the cart to update.
+ *         schema:
+ *           type: integer
+ *       - name: values
+ *         in: body
+ *         required: true
+ *         type: object
+ *         example: {"product_id": 1, "qty": 10}
+ *     responses:
+ *       201:
+ *         description: Successfully updated cart
+ */
 app.put('/cart/:id', db.updateCart)
 
 // orders routes
