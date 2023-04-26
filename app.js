@@ -55,7 +55,7 @@ app.post(
 
 
 app.get('/', (request, response, next) => {
-    response.send('Hello World');
+    response.send('Visit /docs to see a list of available API endpoints.');
 })
 
 
